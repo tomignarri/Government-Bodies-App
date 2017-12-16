@@ -1,0 +1,117 @@
+//
+//  ViewController.swift
+//  Project BodySwapp
+//
+//  Created by Thomas Ignarri on 6/22/17.
+//  Copyright © 2017 Thomas Ignarri. All rights reserved.
+//
+
+import UIKit
+
+class ViewController: UIViewController {
+
+    var imageNames1 = ["sandersHead", "trumpHead","hilaryHead","sessionsHead","putinHead","obamaHead", "cruzHead"]
+    var imageNames2 = ["macawLower","gopherLower","penguinLower","dobermanLower","chihuahaLower","horseLower","dolphinLower"]
+    var pickedImage = String()
+    var currentImage = 0
+    
+    @IBOutlet weak var displayImage: UIImageView!
+    //400x200
+    @IBOutlet weak var displayImage2: UIImageView!
+    //375x334
+    @IBOutlet weak var imageContainer: UIView!
+    
+    
+    //BUTTON FUNCTIONALITY
+    //UPPER
+    @IBAction func randomizeImage(_ sender: Any) {
+        displayImage.image = UIImage(named: (produceRandomValue1(imageNames1)))
+    }
+    
+    @IBAction func nextImage1(_ sender: Any) {
+        currentImage += 1
+        if currentImage > (imageNames1.count - 1){
+            currentImage = 0
+        }
+        displayImage.image = UIImage(named: imageNames1[currentImage])
+    }
+    
+    @IBAction func previousImage1(_ sender: Any) {
+        currentImage -= 1
+        if currentImage < 0{
+            currentImage = (imageNames1.count - 1)
+        }
+        displayImage.image = UIImage(named: imageNames1[currentImage])
+    }
+    
+    
+    //LOWER
+    @IBAction func randomizeImage2(_ sender: Any) {
+        
+        displayImage2.image = UIImage(named: (produceRandomValue2(imageNames2)))
+    }
+    
+    @IBAction func nextImage2(_ sender: Any) {
+        currentImage += 1
+        if currentImage > (imageNames2.count - 1){
+            currentImage = 0
+        }
+        displayImage2.image = UIImage(named: imageNames2[currentImage])
+    }
+    
+    @IBAction func previousImage2(_ sender: Any) {
+        currentImage -= 1
+        if currentImage < 0 {
+            currentImage = (imageNames2.count - 1)
+        }
+        displayImage2.image = UIImage(named: imageNames2[currentImage])
+    }
+    
+    //RANDOMIZING FUNCTIONS
+    func randomFromZero(to number: Int) -> Int {
+        return Int(arc4random_uniform(UInt32(number)))
+    }
+    
+    func produceRandomValue1(_ array: [String]) -> String {
+        let randomIndex = randomFromZero(to: array.count)
+        let pickedImage = imageNames1[randomIndex]
+        return pickedImage
+    }
+
+    func produceRandomValue2(_ array: [String]) -> String {
+        let randomIndex = randomFromZero(to: array.count)
+        let pickedImage = imageNames2[randomIndex]
+        return pickedImage
+    }
+    
+    //SHARING
+    @IBAction func shareTapped(_ sender: UIButton) {
+        
+        //create screenshot
+        UIGraphicsBeginImageContext(imageContainer.frame.size)
+        imageContainer.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        let vc = UIActivityViewController(activityItems: [image!], applicationActivities: [])
+        vc.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+        
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Do any additional setup after loading the view, typically from a nib.
+    }
+    
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+
+
+}
+
